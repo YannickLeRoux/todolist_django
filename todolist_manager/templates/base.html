@@ -1,0 +1,60 @@
+  {% load static %}<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width" />
+      {% block title %}{% endblock %}
+      <link rel="stylesheet" href="{% static "todolists/css/bootstrap.min.css" %}">
+    </head>
+    <body>
+      <!-- navbar -->
+      <div class="container">
+
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#000066;" >
+        <a class="navbar-brand" href="#">TO DO LIST Manager</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Pricing</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav navbar-right">
+            {% if  user.is_authenticated %}
+              <li class="nav-item" style="color:white;">Welcome back, {{ user.username }}</li>
+              <li class="nav-item">
+                <a href="#" class="btn btn-sm align-middle btn-outline-secondary">Logout</a>
+              </li>
+              
+            {% else %}
+              <li class="nav-item">
+                <a href="#" class="btn btn-sm align-middle btn-outline-secondary">Login</a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="btn btn-sm align-middle btn-outline-secondary">Signup</a>
+              </li>
+            {% endif %}
+          </ul>
+          
+        </div>
+        </nav>
+
+      </div>
+      <!-- end navbar -->
+      <div class="container">
+        
+      {% block content %}
+        
+      {% endblock %}
+
+      </div>
+    </body>
+  </html>
