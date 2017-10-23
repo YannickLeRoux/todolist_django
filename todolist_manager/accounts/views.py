@@ -7,12 +7,10 @@ from django.contrib.auth.views import LoginView
 
 from . import forms
 
-class SignUp(CreateView):
+class SignUpView(CreateView):
     form_class = forms.UserCreateForm
-    success_url = reverse_lazy('accounts:login')
+    success_url = reverse_lazy('login')
     template_name = 'accounts/signup.html'
     
-class CustomLoginView(LoginView):
-    success_url = reverse('todolists:lists')
-    template_name="accounts/login.html"
+
 
