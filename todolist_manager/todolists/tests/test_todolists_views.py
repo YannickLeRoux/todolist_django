@@ -20,4 +20,6 @@ class HomeTests(TestCase):
         signup_url = reverse('signup')
         self.assertContains(self.response, 'href="{0}"'.format(signup_url))
 
-
+    def test_home_view_contains_link_to_login_page(self):
+        login_url = reverse('login')
+        self.assertContains(self.response, 'href="{0}"'.format(login_url))
