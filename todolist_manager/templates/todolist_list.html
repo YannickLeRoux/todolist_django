@@ -2,5 +2,11 @@
 
 {% block content %}
   <h1>This is the TodoList List Page</h1>
+  <a class='btn btn-info my-2' href="{% url 'new_list' %}">Add a New List</a>
+  <ul class='my-4'>
+    {% for list in todolists %}
+    <li><a href="#">{{ list.title }}</a></li>
+    {% endfor %}
+  </ul>
   
 {% endblock %}

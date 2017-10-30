@@ -7,6 +7,8 @@ from django.contrib.auth.views import LoginView
 from ..views import SignUpView
 from ..forms import SignUpForm
 
+## SIGNUP TESTS
+
 class SignUpViewTests(TestCase):
 
     def setUp(self):
@@ -58,7 +60,7 @@ class SuccessfulSignUpTests(TestCase):
 
     def test_redirection(self):
         '''
-        A valid form submission should redirect the user to the home page
+        A valid form submission should redirect the user to the login page
         '''
         self.assertRedirects(self.response, self.login_url)
 
@@ -94,6 +96,7 @@ class InvalidSignUpTests(TestCase):
     def test_dont_create_user(self):
         self.assertFalse(User.objects.exists())
 
+## LOGIN TESTS
 
 class LoginViewTests(TestCase):
 
@@ -127,4 +130,30 @@ class LoginViewTests(TestCase):
         self.assertContains(self.response, '<input', 3)
         self.assertContains(self.response, 'type="text"', 1)
         self.assertContains(self.response, 'type="password"', 1)
+
+class SuccessfulLogInTests(TestCase):
+    def setUp(self):
+
+        User.objects.create(
+                username='yannick',
+                password='dancehall',
+                email='rasyann@hotmail.com')
+
+        data = {
+            'username': 'yannick',
+            'email':'rasyann@hotmail.com',
+            'password': 'dancehall',
+        }
+
+        url = reverse('login')
+        self.lists_url = reverse('lists')
+        self.response = self.client.post(url, data)    
+    
+    def test_redirection(self):
+        '''
+        A valid login form submission should redirect the user 
+        to the todolists page
+        '''
+        self.assertRedirects(self.response, self.lists_url)
+
 
