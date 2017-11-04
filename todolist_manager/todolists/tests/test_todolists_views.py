@@ -1,7 +1,8 @@
 from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
-from ..views import HomePageView, ToDoListView
+from ..views import HomePageView, ToDoListView, CreateListView
+
 
 class HomeTests(TestCase):
 
@@ -24,6 +25,7 @@ class HomeTests(TestCase):
         login_url = reverse('login')
         self.assertContains(self.response, 'href="{0}"'.format(login_url))
 
+
 class TodoListsPageTests(TestCase):
 
     def setUp(self):
@@ -37,7 +39,7 @@ class TodoListsPageTests(TestCase):
         view = resolve('/lists/')
         self.assertEquals(view.func.view_class, ToDoListView)
 
-    def test_list_view_contains_link_to_tasks_page(self):
+    def test_lists_view_contains_link_to_tasks_page(self):
         tasks_url = reverse('tasks')
         self.assertContains(self.response, 'href="{0}"'.format(tasks_url))
 
@@ -50,6 +52,25 @@ class TodoListsPageTests(TestCase):
 
     # def test_lists_page_contains_a_list_of_todolist(self):
     #     pass
+
+    # def new_user_get_empty_message(self):
+    #     self.user = User.objects.create()
+
+class CreateListViewTest(TestCase):
+    '''
+    TODO: test a valid form submision redirect to lists
+    '''
+    def setUp(self):
+        url = reverse('new_list')
+        self.response = self.client.get(url)
+    
+    def test_createlist_view_status_code(self):
+        self.assertEquals(self.response.status_code, 200)
+
+    def test_createlists_url_resolve_to_CreateListView(self):
+        view = resolve('/newlist/')
+        self.assertEquals(view.func.view_class, CreateListView)
+
 
 
 
