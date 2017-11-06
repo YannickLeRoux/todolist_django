@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView,ListView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import ToDoList
+from .models import ToDoList, Task
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -41,4 +41,18 @@ class CreateListView(LoginRequiredMixin,CreateView):
             return super(CreateListView, self).form_valid(form)
 
 
-# Create your views here.
+class TasksListView(LoginRequiredMixin,ListView):
+    model = Task
+    context_object_name = 'tasks'
+    template_name = 'tasks_list.html'
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        kwargs['todolist'] = self.todolist
+        return super().get_context_data(**kwargs)
+
+    def get_queryset(self):
+        self.todolist = get_object_or_404(ToDoList, pk=self.kwargs.get('pk'))
+        queryset = self.todolist.tasks.order_by('-date_created')
+        return queryset
+
