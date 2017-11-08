@@ -10,18 +10,23 @@ from ..models import ToDoList, Task
 class TasksListViewTests(TestCase):
 
     def setUp(self):
-        user = User.objects.create_user(username='Yannick',email='rasyann@hotmail.com',password='dancehall')
+        user = User.objects.create_user(username='Yannick',email='r@hotmail.com',password='testpassword')
         todolist = ToDoList.objects.create(title='Test List', user=user)
-        task = Task.objects.create(description='J ai ca a faire',
-                todolist=todolist)
-        url = reverse('tasks', kwargs={'pk':1})
+        Task.objects.create(description='J ai ca a faire',todolist=todolist)
+        url = reverse('tasks', kwargs={'slug':'test-list'})
         self.response = self.client.get(url)
     
-    def test_tasks_view_status_code(self):
+    def test_tasks_view_redirect_if_not_logged_in(self):
+        self.assertEquals(self.response.status_code, 302)
+
+    def test_task_view_status_code_if_logged_in(self):
+        self.client.login(username='Yannick', password='testpassword')
+        url = reverse('tasks', kwargs={'slug':'test-list'})
+        self.response = self.client.get(url)
         self.assertEquals(self.response.status_code, 200)
 
     def test_tasks_url_resolve_to_taskslist_view(self):
-        view = resolve('/lists/1/')
+        view = resolve('/lists/test-list/')
         self.assertEquals(view.func.view_class, TasksListView)
 
 

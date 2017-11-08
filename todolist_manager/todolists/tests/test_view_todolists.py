@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
@@ -6,11 +7,19 @@ from ..views import HomePageView, ToDoListView, CreateListView
 class TodoListsPageTests(TestCase):
 
     def setUp(self):
+        User.objects.create_user(username='Yannick',email='r@hotmail.com',password='testpassword')
+        self.client.login(username='Yannick', password='testpassword')
         url = reverse('lists')
         self.response = self.client.get(url)
-    
-    def test_todolist_view_status_code(self):
+
+    def test_todolists_view_status_code_if_logged_in(self):
         self.assertEquals(self.response.status_code, 200)
+    
+    def test_todolist_view_redirect_if_not_logged_in(self):
+        self.client.logout()
+        url = reverse('lists')
+        self.response = self.client.get(url)
+        self.assertEquals(self.response.status_code, 302)
 
     def test_lists_url_resolve_to_lists_view(self):
         view = resolve('/lists/')
