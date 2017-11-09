@@ -4,10 +4,13 @@ from django.urls import resolve
 from django.test import TestCase
 from ..views import HomePageView, ToDoListView, CreateListView
 
+from ..models import ToDoList
+
 class TodoListsPageTests(TestCase):
 
     def setUp(self):
-        User.objects.create_user(username='Yannick',email='r@hotmail.com',password='testpassword')
+        self.user= User.objects.create_user(username='Yannick',email='r@hotmail.com',password='testpassword')
+        ToDoList.objects.create(title="test list",user=self.user)
         self.client.login(username='Yannick', password='testpassword')
         url = reverse('lists')
         self.response = self.client.get(url)
@@ -26,7 +29,7 @@ class TodoListsPageTests(TestCase):
         self.assertEquals(view.func.view_class, ToDoListView)
 
     def test_lists_view_contains_link_to_tasks_page(self):
-        tasks_url = reverse('tasks')
+        tasks_url = reverse('tasks', kwargs={'slug':'test-list'})
         self.assertContains(self.response, 'href="{0}"'.format(tasks_url))
 
     def test_lists_view_contains_link_to_create_new_list(self):
