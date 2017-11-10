@@ -47,15 +47,18 @@ class TasksListView(LoginRequiredMixin,ListView):
     template_name = 'tasks_list.html'
     paginate_by = 20
 
-    # def get_context_data(self, **kwargs):
-    #     kwargs['todolist'] = self.todolist
-    #     return super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        '''
+        Get the Todolist realted to the tasks via the slug 
+        '''
+        context = super().get_context_data(**kwargs)
+        context['todolist'] = get_object_or_404(ToDoList, slug=self.kwargs.get('slug'))
+        return context
 
     def get_queryset(self):
         queryset = Task.objects.filter(todolist__slug=self.kwargs['slug']).order_by('-date_created')
-        # self.todolist = get_object_or_404(ToDoList, slug=self.kwargs.get('slug'))
-        # queryset = self.todolist.tasks.order_by('-date_created')
         return queryset
+
 
 class CreateTaskView(LoginRequiredMixin,CreateView):
     fields = ('description',)
