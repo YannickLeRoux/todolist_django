@@ -2,7 +2,10 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
+from django.forms import ModelForm
 from ..views import CreateListView
+from ..models import ToDoList
+
 
 class CreateListViewTest(TestCase):
     '''
@@ -27,6 +30,10 @@ class CreateListViewTest(TestCase):
     def test_csrf(self):
         self.assertContains(self.response, 'csrfmiddlewaretoken')
 
+    def test_contains_form(self):
+        form = self.response.context.get('form')
+        self.assertIsInstance(form, ModelForm)
+
     def test_form_inputs(self):
         '''
         The view must contain five inputs: csrf, username, email,
@@ -34,6 +41,11 @@ class CreateListViewTest(TestCase):
         '''
         self.assertContains(self.response, '<input', 2)
         self.assertContains(self.response, 'type="text"', 1)
+
+    def test_todolist_created(self):
+        url = reverse('new_list') 
+        self.response = self.client.post(url,{'title':'test list'})
+        self.assertEquals(ToDoList.objects.count(),1)
 
     # tester que la liste cree corespond bien a l user de la request
 

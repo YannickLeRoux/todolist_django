@@ -29,6 +29,13 @@ class TasksListViewTests(TestCase):
         view = resolve('/lists/test-list/')
         self.assertEquals(view.func.view_class, TasksListView)
 
+    def test_tasks_view_contains_link_to_new_task(self):
+        new_task_url = reverse('new_task')
+        self.assertContains(self.response, 'href="{0}"'.format(new_task_url))
+
+
+
+
 
 
 

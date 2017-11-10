@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^lists/$', views.ToDoListView.as_view(), name='lists'),
     url(r'^newlist/$', views.CreateListView.as_view(), name='new_list'),
     url(r'^lists/(?P<slug>[-\w]+)/$', views.TasksListView.as_view(), name='tasks'),
+    url(r'^lists/(?P<slug>[-\w]+)/new/$',views.CreateTaskView.as_view(),name='new_task'),
 
     # url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     # url(r'^accounts/', include('django.contrib.auth.urls')),

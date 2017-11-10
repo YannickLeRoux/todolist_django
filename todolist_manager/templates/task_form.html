@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Create a new task:</h2>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+      <div class="card">
+        <div class="card-body">
+          <!-- <h3 class="card-title">Log in</h3> -->
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% include 'includes/form.html' %}
+            <button type="submit" class="btn btn-primary">Create</button>
+          </form>
+        </div>
+        <div class="card-footer text-muted text-center">
+          <small><a href="{% url 'tasks' %}">Back to the Tasks Page</a></small>
+        </div>
+      </div>
+      <div class="text-center py-2">
+      </div>
+    </div>
+  </div>
+  
+{% endblock content %}

@@ -57,3 +57,13 @@ class TasksListView(LoginRequiredMixin,ListView):
         # queryset = self.todolist.tasks.order_by('-date_created')
         return queryset
 
+class CreateTaskView(LoginRequiredMixin,CreateView):
+    fields = ('description',)
+    model = Task
+    template_name = 'task_form.html'
+    success_url = reverse_lazy('tasks',kwargs={'slug':'slug'}) # TODO: Not
+
+    def form_valid(self, form):
+            form.instance.user = self.request.user
+            return super(CreateTaskView, self).form_valid(form)
+
