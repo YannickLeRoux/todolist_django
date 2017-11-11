@@ -5,7 +5,13 @@
   <h1>Current TodoList:</h1>
   <p>{{ todolist.title }}</p>
 
-	<a class='btn btn-info' href="{% url 'new_task' todolist.slug %}">Add a New Task</a>
+	<form method="POST">
+	  {% csrf_token %}
+	  <input class="form-control input-lg" type="text" name="task_description" placeholder="Enter a task to add on your list" id="id_new_task">
+	  <input type="submit" name="" id="" value="Add this" />
+		
+	</form>
+
   </div>
   <div class='list-group'>
 		{% if tasks %}

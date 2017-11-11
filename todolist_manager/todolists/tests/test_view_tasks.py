@@ -12,10 +12,9 @@ class TasksListViewTests(TestCase):
     def setUp(self):
         user = User.objects.create_user(username='Yannick',email='r@hotmail.com',password='testpassword')
         todolist = ToDoList.objects.create(title='Test List', user=user)
-        Task.objects.create(description='J ai ca a faire',todolist=todolist)
         self.client.login(username='Yannick', password='testpassword')
-        url = reverse('tasks', kwargs={'slug':'test-list'})
-        self.response = self.client.get(url)
+        self.url = reverse('tasks', kwargs={'slug':'test-list'})
+        self.response = self.client.get(self.url)
     
     def test_tasks_view_redirect_if_not_logged_in(self):
         self.client.logout()
@@ -30,9 +29,24 @@ class TasksListViewTests(TestCase):
         view = resolve('/lists/test-list/')
         self.assertEquals(view.func.view_class, TasksListView)
 
-    def test_tasks_view_contains_link_to_new_task(self):
-        new_task_url = reverse('new_task', kwargs={'slug':'test-list'})
-        self.assertContains(self.response,'href="{0}"'.format(new_task_url))
+    # def test_tasks_view_contains_form_inputs(self):
+    #     ''' contains 4 inputs text/submit/csrf/checkbox'''
+    #     self.assertContains(self.response,'<input',4)
+    #     self.assertContains(self.response,'type="text"',1)
+
+    def test_valid_post_create_a_new_task(self):
+        response = self.client.post(self.url, data={'task_description': 'First activity'})
+
+        self.assertEquals(Task.objects.count(),1)
+        new_task = Task.objects.first()
+        self.assertEquals(new_task.description,'First activity')
+
+        self.assertIn('First activity', response.content.decode())
+        self.assertTemplateUsed(response,'tasks_list.html')
+
+
+        
+        
 
 
 
