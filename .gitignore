@@ -1,7 +1,3 @@
-secret.sh
-*.pyc
-*.swp
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -105,6 +101,11 @@ ENV/
 
 *.sqlite3
 
+# vim
 *.swp
 
-migrations/ 
+migrations/
+
+secret.sh
+
+notes.txt
