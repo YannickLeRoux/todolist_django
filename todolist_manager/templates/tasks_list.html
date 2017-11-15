@@ -17,11 +17,10 @@
 			
 			{% for task in tasks %}
 				<span class='list-group-item'>
-          <input class="form-check-input my-2 " type="checkbox" value="">
-          <a href="#" class='my-2'>{{ task.description }}</a>
+          <i class="fa fa-circle" aria-hidden="true"></i>
+          <span>{{ task.description }}</span>
           <a href="#" class="btn btn-info btn-md float-right">
-          <i class="fa fa-trash" aria-hidden="true"></i> Delete 
-        </a>
+          <i class="fa fa-trash" aria-hidden="true"></i> </a>
 
         
         </span>

@@ -46,7 +46,7 @@ class TasksListView(LoginRequiredMixin,CreateView):
     fields = ['description',]
     context_object_name = 'tasks'
     template_name = 'tasks_list.html'
-    success_url = reverse_lazy('tasks')
+    # success_url = reverse_lazy('tasks', kwargs={'slug':kwargs.get('slug')})
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
@@ -62,13 +62,16 @@ class TasksListView(LoginRequiredMixin,CreateView):
         queryset = Task.objects.filter(todolist__slug=self.kwargs['slug']).order_by('-date_created')
         return queryset
 
-    def form_valid(self, form): #TODO make this work
-        # post = form.save(commit=False) task.todolist= 
-        # post.updated_by = self.request.user
-        # post.updated_at = timezone.now()
-        # post.save()
-            form.instance.user = self.request.user
-            return super(TasksListView, self).form_valid(form)
+    def form_valid(self, form):
+        task = form.save(commit=False) 
+        task.todolist = get_object_or_404(ToDoList,
+                slug=self.kwargs.get('slug'))
+        task.save()
+        return super(TasksListView, self).form_valid(form)
+
+    def get_success_url(self):
+        slug = self.kwargs.get('slug')
+        return reverse_lazy('tasks', kwargs={'slug': slug})
 
 
 
