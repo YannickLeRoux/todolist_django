@@ -41,10 +41,12 @@ class CreateListView(LoginRequiredMixin,CreateView):
             return super(CreateListView, self).form_valid(form)
 
 
-class TasksListView(LoginRequiredMixin,ListView):
+class TasksListView(LoginRequiredMixin,CreateView):
     model = Task
+    fields = ['description',]
     context_object_name = 'tasks'
     template_name = 'tasks_list.html'
+    success_url = reverse_lazy('tasks')
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
@@ -53,20 +55,31 @@ class TasksListView(LoginRequiredMixin,ListView):
         '''
         context = super().get_context_data(**kwargs)
         context['todolist'] = get_object_or_404(ToDoList, slug=self.kwargs.get('slug'))
+        context['tasks']= Task.objects.filter(todolist__slug=self.kwargs['slug']).order_by('-date_created') 
         return context
 
     def get_queryset(self):
         queryset = Task.objects.filter(todolist__slug=self.kwargs['slug']).order_by('-date_created')
         return queryset
 
-
-class CreateTaskView(LoginRequiredMixin,CreateView):
-    fields = ('description',)
-    model = Task
-    template_name = 'task_form.html'
-    success_url = reverse_lazy('tasks',kwargs={'slug':'slug'}) # TODO: Not
-
-    def form_valid(self, form):
+    def form_valid(self, form): #TODO make this work
+        # post = form.save(commit=False) task.todolist= 
+        # post.updated_by = self.request.user
+        # post.updated_at = timezone.now()
+        # post.save()
             form.instance.user = self.request.user
-            return super(CreateTaskView, self).form_valid(form)
+            return super(TasksListView, self).form_valid(form)
+
+
+
+
+# class CreateTaskView(LoginRequiredMixin,CreateView):
+#     fields = ('description',)
+#     model = Task
+#     template_name = 'task_form.html'
+#     success_url = reverse_lazy('tasks',kwargs={'slug':'slug'}) # TODO: Not
+
+#     def form_valid(self, form):
+#             form.instance.user = self.request.user
+#             return super(CreateTaskView, self).form_valid(form)
 
