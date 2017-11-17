@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView,ListView, CreateView
+from django.views.generic import (TemplateView,ListView, 
+        CreateView, DeleteView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import ToDoList, Task
@@ -73,6 +74,13 @@ class TasksListView(LoginRequiredMixin,CreateView):
         slug = self.kwargs.get('slug')
         return reverse_lazy('tasks', kwargs={'slug': slug})
 
+
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
+    model = Task
+
+    def get_success_url(self):
+        slug = self.kwargs.get('slug')
+        return reverse_lazy('tasks', kwargs={'slug': slug})
 
 
 

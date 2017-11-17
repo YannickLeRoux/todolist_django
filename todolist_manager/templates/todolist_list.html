@@ -7,7 +7,7 @@
 		{% if user_lists %}
 			
 			{% for list in user_lists %}
-      <li><a href="{% url 'tasks' list.slug %}">{{ list.title }}</a></li>
+      <li><a href="{% url 'tasks' slug=list.slug %}">{{ list.title }}</a></li>
 			{% endfor %}
 		
 		{% else %}

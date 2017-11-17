@@ -10,20 +10,20 @@ from ..models import ToDoList, Task
 class TasksListViewTests(TestCase):
 
     def setUp(self):
-        user = User.objects.create_user(username='Yannick',email='r@hotmail.com',password='testpassword')
-        todolist = ToDoList.objects.create(title='Test List', user=user)
+        self.user = User.objects.create_user(username='Yannick',email='r@hotmail.com',password='testpassword')
+        self.todolist = ToDoList.objects.create(title='Test List', user=self.user)
         self.client.login(username='Yannick', password='testpassword')
         self.url = reverse('tasks', kwargs={'slug':'test-list'})
-        self.response = self.client.get(self.url)
     
     def test_tasks_view_redirect_if_not_logged_in(self):
         self.client.logout()
         url = reverse('tasks', kwargs={'slug':'test-list'})
-        self.response = self.client.get(url)
-        self.assertEquals(self.response.status_code, 302)
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 302)
 
     def test_task_view_status_code_if_logged_in(self):
-        self.assertEquals(self.response.status_code, 200)
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 200)
 
     def test_tasks_url_resolve_to_taskslist_view(self):
         view = resolve('/lists/test-list/')
@@ -35,27 +35,16 @@ class TasksListViewTests(TestCase):
     #     self.assertContains(self.response,'type="text"',1)
 
     def test_valid_post_create_a_new_task(self):
-        response = self.client.post(self.url, data={'task_description': 'First activity'})
+        self.client.login(username='Yannick', password='testpassword')
+        response = self.client.post(self.url, data={'description': 'First activity'})
 
         self.assertEquals(Task.objects.count(),1)
         new_task = Task.objects.first()
         self.assertEquals(new_task.description,'First activity')
+        
+        self.assertEquals(response.status_code, 302)
 
-        self.assertIn('First activity', response.content.decode())
+        # self.assertIn('First activity', response.content.decode())
         self.assertTemplateUsed(response,'tasks_list.html')
-
-
-        
-        
-
-
-
-
-
-
-
-
-
-
 
 

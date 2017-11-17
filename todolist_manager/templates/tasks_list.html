@@ -19,7 +19,7 @@
 				<span class='list-group-item'>
           <i class="fa fa-circle" aria-hidden="true"></i>
           <span>{{ task.description }}</span>
-          <a href="#" class="btn btn-info btn-md float-right">
+          <a href="{% url 'delete_task' slug=task.todolist.slug task_pk=task.id %}" class="btn btn-info btn-md float-right">
           <i class="fa fa-trash" aria-hidden="true"></i> </a>
 
         
