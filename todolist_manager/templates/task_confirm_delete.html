@@ -1,28 +1,21 @@
 {% extends 'accounts/base_accounts.html' %}
 
-{% block title %}Delete{% endblock %}
+{% block title %}Delete a task{% endblock %}
 
 {% block content %}
   <div class="row justify-content-center">
     <div class="col-lg-4 col-md-6 col-sm-8">
       <div class="card">
         <div class="card-body">
-          <h3 class="card-title">Log in</h3>
-          <form method="post" novalidate>
-            {% csrf_token %}
-						<!-- <TODOinput type="hidden" name="next" value="{{ next }}"> -->
-            {% include 'accounts/includes/form.html' %}
-            <button type="submit" class="btn btn-primary btn-block">Log in</button>
-          </form>
+          <h3 class="card-title">Are you sure you are done with </h3> 
+          <div class="mx-auto my-5" style="width: 200px;"><em>{{ task.description }}</em></div>
+         <form method="POST">
+          {% csrf_token %}
+          <input type="submit" value="Confirm Delete" class="btn btn-danger btn-large">
+          <a href="{% url 'tasks' todolist_slug=task.todolist.slug %}" class="btn btn-simple btn-large btn-default">Cancel</a>
+        </form> 
         </div>
-        <div class="card-footer text-muted text-center">
-          New to Django Boards? <a href="{% url 'signup' %}">Sign up</a>
-        </div>
-      </div>
-      <div class="text-center py-2">
-        <small>
-          <a href="#" class="text-muted">Forgot your password?</a>
-        </small>
       </div>
     </div>
   </div>
+  {% endblock %}

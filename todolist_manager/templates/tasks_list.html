@@ -2,8 +2,12 @@
 
 {% block content %}
 <div class="jumbotron">
-  <h1>Current TodoList:</h1>
-  <p>{{ todolist.title }}</p>
+  <h1>Current To-Do List:</h1>
+  <ul>
+    <li><h2>{{ todolist.title }}</h2></li>
+
+    
+  </ul>
 
   <form method="post" novalidate>
     {% csrf_token %}
@@ -16,14 +20,12 @@
 		{% if tasks %}
 			
 			{% for task in tasks %}
-				<span class='list-group-item'>
+				<li class='list-group-item'>
           <i class="fa fa-circle" aria-hidden="true"></i>
-          <span>{{ task.description }}</span>
-          <a href="{% url 'delete_task' slug=task.todolist.slug task_pk=task.id %}" class="btn btn-info btn-md float-right">
-          <i class="fa fa-trash" aria-hidden="true"></i> </a>
-
-        
-        </span>
+          <span class="ml-5">{{ task.description }}</span>
+          <a href="{% url 'delete_task' todolist_slug=task.todolist.slug task_pk=task.pk %}" class="btn btn-info btn-md float-right">
+          <i class="fa fa-times" aria-hidden="true"></i> </a>
+        </li>
 			{% endfor %}
 		
 		{% else %}

@@ -47,7 +47,7 @@ class TasksListView(LoginRequiredMixin,CreateView):
     fields = ['description',]
     context_object_name = 'tasks'
     template_name = 'tasks_list.html'
-    # success_url = reverse_lazy('tasks', kwargs={'slug':kwargs.get('slug')})
+    slug_url_kwarg = 'todolist_slug'
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
@@ -55,8 +55,10 @@ class TasksListView(LoginRequiredMixin,CreateView):
         Get the Todolist realted to the tasks via the slug 
         '''
         context = super().get_context_data(**kwargs)
-        context['todolist'] = get_object_or_404(ToDoList, slug=self.kwargs.get('slug'))
-        context['tasks']= Task.objects.filter(todolist__slug=self.kwargs['slug']).order_by('-date_created') 
+        context['todolist'] = get_object_or_404(ToDoList,
+                slug=self.kwargs.get('todolist_slug'))
+        context['tasks']= Task.objects.filter(
+                todolist__slug=self.kwargs['todolist_slug']).order_by('-date_created') 
         return context
 
     def get_queryset(self):
@@ -66,31 +68,25 @@ class TasksListView(LoginRequiredMixin,CreateView):
     def form_valid(self, form):
         task = form.save(commit=False) 
         task.todolist = get_object_or_404(ToDoList,
-                slug=self.kwargs.get('slug'))
+                slug=self.kwargs.get('todolist_slug'))
         task.save()
         return super(TasksListView, self).form_valid(form)
 
     def get_success_url(self):
-        slug = self.kwargs.get('slug')
-        return reverse_lazy('tasks', kwargs={'slug': slug})
+        todolist_slug = self.kwargs.get('todolist_slug')
+        return reverse_lazy('tasks', kwargs={'todolist_slug': todolist_slug})
 
 
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
+    slug_url_kwarg = 'todolist_slug'
+    pk_url_kwarg = 'task_pk'
+    template_name = '../templates/task_confirm_delete.html'
+
 
     def get_success_url(self):
-        slug = self.kwargs.get('slug')
-        return reverse_lazy('tasks', kwargs={'slug': slug})
+        todolist_slug = self.kwargs.get('todolist_slug')
+        return reverse_lazy('tasks', kwargs={'todolist_slug': todolist_slug})
 
 
-
-# class CreateTaskView(LoginRequiredMixin,CreateView):
-#     fields = ('description',)
-#     model = Task
-#     template_name = 'task_form.html'
-#     success_url = reverse_lazy('tasks',kwargs={'slug':'slug'}) # TODO: Not
-
-#     def form_valid(self, form):
-#             form.instance.user = self.request.user
-#             return super(CreateTaskView, self).form_valid(form)
 

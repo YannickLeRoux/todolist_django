@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>This is the TodoList List Page</h1>
+  <h1>My To-Do Lists:</h1>
   <a class='btn btn-info my-2' href="{% url 'new_list' %}">Add a New List</a>
   <ul class='my-4'>
 		{% if user_lists %}
 			
 			{% for list in user_lists %}
-      <li><a href="{% url 'tasks' slug=list.slug %}">{{ list.title }}</a></li>
+      <li><a href="{% url 'tasks' todolist_slug=list.slug %}">{{ list.title }}</a></li>
 			{% endfor %}
 		
 		{% else %}
-			<strong>No List created yet<strong>
+			<strong>** No list created yet ** <strong>
 
 		{% endif %}
 
